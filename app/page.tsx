@@ -87,10 +87,31 @@ export default function Home() {
 
           <div className="bg-black/5 dark:bg-neutral-900/30 border border-neutral-200 dark:border-neutral-800 
             rounded-2xl p-6 sm:p-8 backdrop-blur-sm">
+            <p className="text-sm sm:text-base text-neutral-700 dark:text-neutral-300 mb-4">
+              Prefer email? Reach me at{" "}
+              <a
+                href="mailto:tilakrajrawat1234@gmail.com"
+                className="underline underline-offset-4 hover:text-[var(--text-primary)]"
+              >
+                tilakrajrawat1234@gmail.com
+              </a>{" "}
+              or check out my{" "}
+              <a
+                href="https://github.com/Tilakrajrawat"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-4 hover:text-[var(--text-primary)]"
+              >
+                GitHub
+              </a>
+              .
+            </p>
+
             <ContactForm />
           </div>
         </div>
       </section>
+
     </>
   );
 }

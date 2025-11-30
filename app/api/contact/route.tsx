@@ -1,24 +1,41 @@
 import { NextResponse } from "next/server";
+import { Resend } from "resend";
 
-export async function POST(request: Request) {
-    try {
-        const body = await request.json();
-        const { name, email, message } = body;
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-        // Just log the data to your terminal window
-        console.log("---------------------------------");
-        console.log("📧 NEW CONTACT FORM SUBMISSION:");
-        console.log("Name:", name);
-        console.log("Email:", email);
-        console.log("Message:", message);
-        console.log("---------------------------------");
+export async function POST(req: Request) {
+  try {
+    const { name, email, message } = await req.json();
 
-        // Return success to the frontend
-        return NextResponse.json({ ok: true, message: "Message received" });
-    } catch (err) {
-        return NextResponse.json(
-            { ok: false, error: "Internal Server Error" },
-            { status: 500 }
-        );
+    if (!name || !email || !message) {
+      return NextResponse.json(
+        { error: "Missing fields" },
+        { status: 400 }
+      );
     }
+
+    const data = await resend.emails.send({
+      from: "Portfolio Contact <onboarding@resend.dev>",
+      to: "tilakrajrawat1234@gmail.com",
+      subject: `New message from ${name}`,
+      replyTo: email,
+      text: `
+New message from your portfolio contact form:
+
+Name: ${name}
+Email: ${email}
+
+Message:
+${message}
+      `,
+    });
+
+    return NextResponse.json({ success: true, data });
+  } catch (error) {
+    console.error("Contact API error:", error);
+    return NextResponse.json(
+      { error: "Failed to send message" },
+      { status: 500 }
+    );
+  }
 }

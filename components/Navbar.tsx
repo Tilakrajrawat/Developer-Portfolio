@@ -34,17 +34,19 @@ export default function Navbar() {
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const NavItem = ({ id, label }: any) => {
+  const NavItem = ({ id, label }: { id: string; label: string }) => {
     const href = isHome ? `#${id}` : `/#${id}`;
 
-    const click = (e: any) => {
+    const click = (e: React.MouseEvent<HTMLAnchorElement>) => {
       if (isHome) {
         e.preventDefault();
         scrollTo(id);
       }
     };
 
-    const active = typeof window !== "undefined" && window.location.hash === `#${id}`;
+    const active =
+      typeof window !== "undefined" &&
+      window.location.hash === `#${id}`;
 
     return (
       <Link
@@ -53,7 +55,11 @@ export default function Navbar() {
         className={`
           px-3 py-1 rounded-md text-xs sm:text-sm transition
           hover:bg-black/5 dark:hover:bg-white/10 
-          ${active ? "text-[var(--text-primary)]" : "text-neutral-400 dark:text-neutral-300"}
+          ${
+            active
+              ? "text-[var(--text-primary)]"
+              : "text-neutral-400 dark:text-neutral-300"
+          }
         `}
       >
         {label}
@@ -77,10 +83,16 @@ export default function Navbar() {
           flex items-center gap-1 sm:gap-2 relative
         "
       >
-        <div className="absolute inset-0 rounded-full opacity-0 hover:opacity-100 transition-all duration-500 pointer-events-none 
-          bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-transparent blur-2xl">
-        </div>
+        {/* subtle glow */}
+        <div
+          className="
+            absolute inset-0 rounded-full opacity-0 hover:opacity-100 
+            transition-all duration-500 pointer-events-none
+            bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-transparent blur-2xl
+          "
+        />
 
+        {/* logo / name */}
         <Link
           href="/"
           onClick={(e) => {
@@ -97,13 +109,30 @@ export default function Navbar() {
           Tilak Raj Rawat
         </Link>
 
-        <div className="w-px h-4 bg-white/10 mx-1"></div>
+        <div className="w-px h-4 bg-white/10 mx-1" />
 
+        {/* nav items */}
         <NavItem id="projects" label="Work" />
         <NavItem id="about" label="About" />
         <NavItem id="blog" label="Blog" />
         <NavItem id="contact" label="Contact" />
 
+        {/* Download Resume button */}
+        <a
+          href="/Tilak_Raj_Rawat_Resume.pdf.pdf"
+          className="
+            hidden sm:inline-flex items-center px-3 py-1.5 
+            text-xs sm:text-sm font-medium rounded-full
+            border border-white/15 
+            bg-white/5 hover:bg-white/10 
+            text-[var(--text-primary)] transition
+          "
+          download
+        >
+          Download Resume
+        </a>
+
+        {/* theme switcher */}
         <div
           className="pl-1 sm:pl-2 relative z-50 scale-90 sm:scale-100"
           onClick={(e) => e.stopPropagation()}

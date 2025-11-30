@@ -1,90 +1,89 @@
 "use client";
+
 import { useState } from "react";
-import { Send } from "lucide-react";
 
 export default function ContactForm() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setStatus("sending");
+    setLoading(true);
+    setError("");
 
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, message }),
-      });
+    const form = e.currentTarget;
+    const formData = new FormData(form);
 
-      if (res.ok) {
-        setStatus("sent");
-        setName("");
-        setEmail("");
-        setMessage("");
-      } else {
-        setStatus("error");
-      }
-    } catch (error) {
-      console.error(error);
-      setStatus("error");
+    const data = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      message: formData.get("message"),
+    };
+
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+
+    const json = await res.json();
+
+    setLoading(false);
+
+    if (!res.ok) {
+      setError(json.error || "Something went wrong");
+      return;
     }
+
+    setSuccess(true);
+    form.reset();
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
-      <div className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-             <label className="text-sm text-neutral-500 ml-2">Name</label>
-             <input 
-               required 
-               value={name}
-               onChange={(e) => setName(e.target.value)}
-               placeholder="John Doe" 
-               className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-2xl p-4 text-[var(--text-primary)] placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
-             />
-          </div>
-          <div className="space-y-2">
-             <label className="text-sm text-neutral-500 ml-2">Email</label>
-             <input 
-               required 
-               type="email" 
-               value={email}
-               onChange={(e) => setEmail(e.target.value)}
-               placeholder="john@example.com" 
-               className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-2xl p-4 text-[var(--text-primary)] placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
-             />
-          </div>
-        </div>
-        
-        <div className="space-y-2">
-           <label className="text-sm text-neutral-500 ml-2">Message</label>
-           <textarea 
-             required 
-             value={message}
-             onChange={(e) => setMessage(e.target.value)}
-             rows={6} 
-             placeholder="Tell me about your project..." 
-             className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-2xl p-4 text-[var(--text-primary)] placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all resize-none"
-           />
-        </div>
-      </div>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <input
+        name="name"
+        placeholder="Your name"
+        required
+        className="bg-white/5 dark:bg-neutral-900 border border-neutral-700 
+                   px-4 py-3 rounded-lg"
+      />
 
-      <div className="mt-8 flex justify-end">
-        <button 
-          disabled={status === "sending" || status === "sent"}
-          className="flex items-center gap-2 px-10 py-4 rounded-full bg-black dark:bg-white text-white dark:text-black font-semibold hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100"
-        >
-          {status === "sending" ? "Sending..." : status === "sent" ? "Message Sent!" : status === "error" ? "Try Again" : (
-            <>
-              Send Message <Send size={18} />
-            </>
-          )}
-        </button>
-      </div>
+      <input
+        name="email"
+        type="email"
+        placeholder="Your email"
+        required
+        className="bg-white/5 dark:bg-neutral-900 border border-neutral-700 
+                   px-4 py-3 rounded-lg"
+      />
+
+      <textarea
+        name="message"
+        placeholder="Your message"
+        rows={5}
+        required
+        className="bg-white/5 dark:bg-neutral-900 border border-neutral-700 
+                   px-4 py-3 rounded-lg"
+      />
+
+      {error && <p className="text-red-400 text-sm">{error}</p>}
+      {success && (
+        <p className="text-green-400 text-sm">
+          Message sent successfully!
+        </p>
+      )}
+
+      <button
+        type="submit"
+        disabled={loading}
+        className="
+          px-6 py-3 rounded-full bg-white text-black font-semibold
+          disabled:opacity-40 disabled:cursor-not-allowed
+        "
+      >
+        {loading ? "Sending..." : "Send Message"}
+      </button>
     </form>
   );
 }
