@@ -35,8 +35,8 @@ export default function Home() {
                 </p>
               </div>
             </div>
-
-            <div className="md:col-span-2">
+            
+            <div id="featured-projects" className="scroll-mt-24">
               <h3 className="text-2xl font-semibold mb-6 text-[var(--text-primary)]">
                 Featured Projects
               </h3>

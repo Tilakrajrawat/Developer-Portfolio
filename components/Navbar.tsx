@@ -4,6 +4,7 @@ import Link from "next/link";
 import ThemeSwitcher from "./ThemeSwitcher";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -11,6 +12,7 @@ export default function Navbar() {
 
   const [hidden, setHidden] = useState(false);
   const [lastY, setLastY] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
@@ -41,6 +43,7 @@ export default function Navbar() {
       if (isHome) {
         e.preventDefault();
         scrollTo(id);
+        setIsMenuOpen(false);
       }
     };
 
@@ -53,7 +56,8 @@ export default function Navbar() {
         href={href}
         onClick={click}
         className={`
-          px-3 py-1 rounded-md text-xs sm:text-sm transition
+          block px-4 py-2 sm:px-3 sm:py-1 rounded-md 
+          text-sm transition
           hover:bg-black/5 dark:hover:bg-white/10 
           ${
             active
@@ -77,22 +81,14 @@ export default function Navbar() {
       <nav
         className="
           glass-panel
-          px-3 py-1.5 sm:px-4 sm:py-2
+          px-4 py-2 sm:px-4 sm:py-2
           rounded-full
           shadow-xl backdrop-blur-xl border border-white/10
-          flex items-center gap-1 sm:gap-2 relative
+          flex items-center justify-between sm:justify-center gap-2 
+          w-[90%] sm:w-auto relative
         "
       >
-        {/* subtle glow */}
-        <div
-          className="
-            absolute inset-0 rounded-full opacity-0 hover:opacity-100 
-            transition-all duration-500 pointer-events-none
-            bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-transparent blur-2xl
-          "
-        />
-
-        {/* logo / name */}
+        {/* Name (always visible) */}
         <Link
           href="/"
           onClick={(e) => {
@@ -101,44 +97,70 @@ export default function Navbar() {
               window.scrollTo({ top: 0, behavior: "smooth" });
             }
           }}
-          className="
-            px-3 sm:px-4 py-1 text-xs sm:text-sm font-medium 
-            hover:bg-black/5 dark:hover:bg-white/10 rounded-md
-          "
+          className="text-sm font-medium px-2 py-1 rounded-md hover:bg-black/5 dark:hover:bg-white/10"
         >
           Tilak Raj Rawat
         </Link>
 
-        <div className="w-px h-4 bg-white/10 mx-1" />
+        {/* Desktop NavItems */}
+        <div className="hidden sm:flex items-center gap-1">
+          <NavItem id="projects" label="Work" />
+          <NavItem id="about" label="About" />
+          <NavItem id="blog" label="Blog" />
+          <NavItem id="contact" label="Contact" />
+        </div>
 
-        {/* nav items */}
-        <NavItem id="projects" label="Work" />
-        <NavItem id="about" label="About" />
-        <NavItem id="blog" label="Blog" />
-        <NavItem id="contact" label="Contact" />
-
-        {/* Download Resume button */}
+        {/* Resume Button (visible on ALL screens) */}
         <a
-          href="/Tilak_Raj_Rawat_Resume.pdf.pdf"
+          href="/Tilak_Raj_Rawat_Resume.pdf"
+          download
           className="
-            hidden sm:inline-flex items-center px-3 py-1.5 
+            inline-flex items-center px-3 py-1.5 
             text-xs sm:text-sm font-medium rounded-full
             border border-white/15 
             bg-white/5 hover:bg-white/10 
             text-[var(--text-primary)] transition
           "
-          download
         >
           Download Resume
         </a>
 
-        {/* theme switcher */}
-        <div
-          className="pl-1 sm:pl-2 relative z-50 scale-90 sm:scale-100"
-          onClick={(e) => e.stopPropagation()}
-        >
+        {/* Theme Switcher */}
+        <div className="relative z-50 scale-90 sm:scale-100">
           <ThemeSwitcher />
         </div>
+
+        {/* Mobile Menu Toggle */}
+        <button
+          className="sm:hidden ml-2 p-2 rounded-md hover:bg-white/10"
+          onClick={() => setIsMenuOpen((p) => !p)}
+        >
+          {isMenuOpen ? (
+            <X className="w-5 h-5" />
+          ) : (
+            <Menu className="w-5 h-5" />
+          )}
+        </button>
+
+        {/* Mobile Dropdown Menu */}
+        {isMenuOpen && (
+          <div
+            className="
+              absolute top-full mt-3 left-0 right-0
+              bg-black/80 dark:bg-neutral-900/80 
+              border border-white/10 backdrop-blur-xl
+              rounded-2xl p-4 flex flex-col gap-1
+            "
+          >
+            {/* Only show About + Blog on mobile */}
+            <NavItem id="featured-projects" label="Work" />
+            <NavItem id="contact" label="Contact" />
+            <NavItem id="about" label="About" />
+            <NavItem id="blog" label="Blog" />
+            
+            
+          </div>
+        )}
       </nav>
     </div>
   );

@@ -120,7 +120,7 @@ export default function Hero() {
             whileTap={{ scale: 0.95 }}
             onClick={() =>
               document
-                .getElementById("projects")
+                .getElementById("featured-projects")
                 ?.scrollIntoView({ behavior: "smooth" })
             }
             className="px-7 py-3 rounded-full bg-black dark:bg-white text-white dark:text-black font-semibold shadow-lg"
