@@ -112,8 +112,9 @@ export default function Navbar() {
 
         {/* Resume Button (visible on ALL screens) */}
         <a
-          href="/Tilak_Raj_Rawat_Resume.pdf"
-          download
+          href="https://drive.google.com/file/d/13q2CJ_douWWRzZTdWQhBnbNZtTwACGBz/view?usp=drive_link"
+           target="_blank"
+  rel="noopener noreferrer"
           className="
             inline-flex items-center px-3 py-1.5 
             text-xs sm:text-sm font-medium rounded-full
