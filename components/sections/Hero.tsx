@@ -71,7 +71,7 @@ export default function Hero() {
             </a>
 
             <a
-              href="/resume/Tilak-Raj-Rawat-Resume.pdf"
+              href="https://drive.google.com/file/d/1yQM8mvXPGPWeqmnU6OYotEik848al6AZ/view?usp=sharing"
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-xl border border-slate-700 bg-slate-900/50 px-6 py-3 font-medium text-white transition hover:border-blue-500/40"

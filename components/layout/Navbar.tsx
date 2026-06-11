@@ -47,7 +47,7 @@ Tilak Raj Rawat </button>
       </div>
 
       <a
-        href="/resume/Tilak-Raj-Rawat-Resume.pdf"
+        href="https://drive.google.com/file/d/1yQM8mvXPGPWeqmnU6OYotEik848al6AZ/view?usp=sharing"
         target="_blank"
         rel="noopener noreferrer"
         className="
